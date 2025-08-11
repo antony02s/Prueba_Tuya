@@ -38,5 +38,21 @@ def main():
 
     logging.info(f"Run success: {run_id} rows={len(df)}")
 
+    # src/pipeline.py (solo el tramo final)
+    from src.carga.carga_posgre import get_engine, upsert_dataframe
+
+    # ...
+    schema = load_yaml(f"configs/{ENV}/schema.yaml")
+    # ...
+    engine = get_engine(env("PG_USER","postgres"), env("PG_PWD","postgres"),
+                        env("PG_HOST","localhost"), env("PG_DB","postgres"),
+                        int(env("PG_PORT","5432")))
+    upsert_dataframe(
+        df,
+        engine,
+        table=schema["target_table"],
+        unique_keys=schema["unique_keys"],   # <— usa la lista
+    )
+
 if __name__ == "__main__":
     main()

@@ -1,0 +1,64 @@
+name: CI (dev)
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - "src/**"
+      - "configs/dev/**"
+      - "tests/**"
+      - "requirements.txt"
+      - ".github/workflows/ci-dev.yml"
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  test-dev:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test_db
+        ports: [ "5432:5432" ]
+        options: >-
+          --health-cmd="pg_isready -U test -d test_db"
+          --health-interval=10s --health-timeout=5s --health-retries=5
+
+    environment: dev  # usa secrets de "dev"
+
+    env:
+      ENV: dev
+      PG_USER: ${{ secrets.PG_USER }}
+      PG_PWD:  ${{ secrets.PG_PWD }}
+      PG_HOST: ${{ secrets.PG_HOST }}
+      PG_DB:   ${{ secrets.PG_DB }}
+      PG_PORT: "5432"
+      API_TOKEN: ${{ secrets.API_TOKEN || '' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest ruff psycopg[binary]
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..20}; do
+            pg_isready -h 127.0.0.1 -p 5432 -U test && break || sleep 2
+          done
+
+      - name: Lint
+        run: ruff check src tests
+
+      - name: Tests (dev)
+        run: pytest -q

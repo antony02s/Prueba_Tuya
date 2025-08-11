@@ -1,0 +1,39 @@
+name: CI (staging)
+
+on:
+  push:
+    branches: [ "release/**" ]
+    paths:
+      - "src/**"
+      - "configs/staging/**"
+      - "tests/**"
+      - "requirements.txt"
+      - ".github/workflows/ci-staging.yml"
+  pull_request:
+    branches: [ "release/**" ]
+
+jobs:
+  test-staging:
+    runs-on: ubuntu-latest
+    environment: staging
+    env:
+      ENV: staging
+      PG_USER: ${{ secrets.PG_USER }}
+      PG_PWD:  ${{ secrets.PG_PWD }}
+      PG_HOST: ${{ secrets.PG_HOST }}
+      PG_DB:   ${{ secrets.PG_DB }}
+      PG_PORT: "5432"
+      API_TOKEN: ${{ secrets.API_TOKEN || '' }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest ruff psycopg[binary]
+      - name: Lint
+        run: ruff check src tests
+      - name: Tests (staging)
+        run: pytest -q

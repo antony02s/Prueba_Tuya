@@ -1,0 +1,12 @@
+api:
+  url: "https://api.example.com/data"
+  params:
+    start_date: "2025-08-01"
+    end_date: "2025-08-09"
+  headers:
+    Authorization: "Bearer ${API_TOKEN}"  # leer desde .env
+
+files:
+  path: "resources/staging/local_data.csv"
+
+join_key: "id"  # columna para unir API y archivo

@@ -1,0 +1,11 @@
+# Fuentes y parámetros para entorno DEV
+api:
+  url: "https://api.sandbox.example.com/data"   # opcional, puedes ignorarlo si arrancas solo con CSV
+  params: {}
+  headers:
+    Authorization: "Bearer ${API_TOKEN}"        # lee desde .env si lo usas
+
+files:
+  path: "resources/samples/sample_input.csv"     # dataset pequeño para pruebas locales/CI
+
+join_key: "id"

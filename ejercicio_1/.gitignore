@@ -1,0 +1,47 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+.Python
+.pytest_cache/
+.mypy_cache/
+.cache/
+.coverage
+coverage.xml
+
+# --- Entornos virtuales ---
+.venv/
+venv/
+ENV/
+
+# --- Archivos de entorno ---
+.env
+.env.*
+!*.example   # permite subir .env.example como plantilla
+
+# --- Archivos de logs ---
+*.log
+
+# --- Archivos temporales del sistema ---
+.DS_Store
+Thumbs.db
+
+# --- Carpeta staging de datos ---
+resources/staging/
+
+# --- Archivos grandes opcionales ---
+*.parquet
+*.csv
+*.xlsx
+*.json
+
+# --- Editor config ---
+.vscode/
+.idea/
+
+# --- Docker ---
+*.pid

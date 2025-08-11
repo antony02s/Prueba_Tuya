@@ -1,0 +1,18 @@
+required_columns:
+  - id
+  - name
+  - status
+  - created_at
+
+not_null:
+  - id
+  - status
+
+dtypes:
+  id: int
+  name: string
+  status: category
+  created_at: datetime64[ns]
+
+unique_key: id
+target_table: core.customers

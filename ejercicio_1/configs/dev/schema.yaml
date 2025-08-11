@@ -1,0 +1,14 @@
+# Reglas de validación y destino en PostgreSQL (dev)
+required_columns:
+  - id
+  - name
+
+not_null:
+  - id
+
+dtypes:
+  id: int
+  name: string
+
+unique_key: id
+target_table: core_dev.customers
